@@ -1,6 +1,6 @@
 name: Change Tracking Marker
 on:
-  - release
+  release:
       types: [published]
 
 jobs:
