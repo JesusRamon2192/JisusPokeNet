@@ -1,13 +1,22 @@
-- name: Notify New Relic of deployment
-  run: |
-    curl -X POST https://api.newrelic.com/v2/applications/${{ secrets.NEW_RELIC_APP_ID }}/deployments.json \
-         -H "X-Api-Key:${{ secrets.NEW_RELIC_API_KEY }}" \
-         -H 'Content-Type: application/json' \
-         -d '{
-      "deployment": {
-        "revision": "${{ github.sha }}",
-        "changelog": "Desplegado desde GitHub Actions",
-        "description": "Auto deployment",
-        "user": "${{ github.actor }}"
-      }
-    }'
+name: Change Tracking Marker
+on:
+  - release
+      types: [published]
+
+jobs:
+  newrelic:
+    runs-on: ubuntu-latest
+    name: New Relic
+    steps:
+      # This step builds a var with the release tag value to use later
+      - name: Set Release Version from Tag
+        run: echo "RELEASE_VERSION=${{ github.ref_name }}" >> $GITHUB_ENV
+      # This step creates a new Change Tracking Marker
+      - name: New Relic Application Deployment Marker
+        uses: newrelic/deployment-marker-action@v2.2.0
+        with:
+          apiKey: ${{ secrets.NEW_RELIC_API_KEY }}
+          region: "US"
+          guid: ${{ secrets.NEW_RELIC_DEPLOYMENT_ENTITY_GUID }}
+          version: "${{ env.RELEASE_VERSION }}"
+          user: "${{ github.actor }}"
