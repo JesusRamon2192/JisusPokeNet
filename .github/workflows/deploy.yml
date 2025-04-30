@@ -1,59 +1,43 @@
-name: Change Tracking Marker
+# Simple workflow for deploying static content to GitHub Pages
+name: Deploy static content to Pages
+
 on:
+  # Runs on pushes targeting the default branch
+  push:
+    branches: ["main"]
+
+  # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
-  release:
-    types: [published]
+
+# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.
+# However, do NOT cancel in-progress runs as we want to allow these production deployments to complete.
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
 
 jobs:
-  newrelic:
+  # Single deploy job since we're just deploying
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
-    name: New Relic
     steps:
-      # This step builds a var with the release tag value to use later
-      - name: Set Release Version from Tag
-        run: echo "RELEASE_VERSION=${{ github.ref_name }}" >> $GITHUB_ENV
-      # This step creates a new Change Tracking Marker for App123
-      - name: App123 Marker
-        uses: newrelic/deployment-marker-action@v2.2.0
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
         with:
-          apiKey: ${{ secrets.NEW_RELIC_API_KEY }}
-          region: "US"
-          guid: ${{ secrets.NEW_RELIC_DEPLOYMENT_ENTITY_GUID }}
-          version: "${{ env.RELEASE_VERSION }}"
-          changelog: "https://github.com/${{ github.repository }}/blob/master/CHANGELOG.md"
-          commit: "${{ github.sha }}"
-          description: "Automated Release via Github Actions"
-          deploymenttype: "ROLLING"
-          groupId: "Workshop App Release: ${{ github.ref_name }}"
-          user: "${{ github.actor }}"
-      # This step creates a new Change Tracking Marker for App
-      - name: App456 Marker
-        uses: newrelic/deployment-marker-action@v2.2.0
-        with:
-          apiKey: ${{ secrets.NEW_RELIC_API_KEY }}
-          region: "US"
-          guid: ${{ secrets.NEW_RELIC_DEPLOYMENT_ENTITY_GUID_App456 }}
-          version: "${{ env.RELEASE_VERSION }}"
-          changelog: "https://github.com/${{ github.repository }}/blob/master/CHANGELOG.md"
-          commit: "${{ github.sha }}"
-          description: "Automated Release via Github Actions"
-          deploymenttype: "ROLLING"
-          groupId: "Workshop App Release: ${{ github.ref_name }}"
-          user: "${{ github.actor }}"
-      # This step creates a new Change Tracking Marker for App789
-      - name: App789 Marker
-        uses: newrelic/deployment-marker-action@v2.2.0
-        with:
-          apiKey: ${{ secrets.NEW_RELIC_API_KEY }}
-          region: "US"
-          guid: ${{ secrets.NEW_RELIC_DEPLOYMENT_ENTITY }}
-          version: "${{ env.RELEASE_VERSION }}"
-          changelog: "https://github.com/${{ github.repository }}/blob/master/CHANGELOG.md"
-          commit: "${{ github.sha }}"
-          description: "Automated Release via Github Actions"
-          deploymenttype: "ROLLING"
-          groupId: "Workshop App Release: ${{ github.ref_name }}"
-          user: "${{ github.actor }}"
-      # When chaining steps together, the deployment id is placeed into the github environment 
-      - name: View output
-        run: echo "${{ env.deploymentId }}"
+          # Upload entire repository
+          path: '.'
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
