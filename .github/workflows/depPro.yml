@@ -1,0 +1,26 @@
+name: Deploy to Production
+
+on:
+  push:
+    tags:
+      - "v*"  # Solo en tags tipo v1.0.0, etc.
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set env vars for New Relic tracking
+        run: |
+          echo "NEW_RELIC_METADATA_COMMIT=$(git rev-parse HEAD)" >> $GITHUB_ENV
+          echo "NEW_RELIC_METADATA_RELEASE_TAG=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
+
+      - name: Build and deploy app
+        env:
+          NEW_RELIC_METADATA_COMMIT: ${{ env.NEW_RELIC_METADATA_COMMIT }}
+          NEW_RELIC_METADATA_RELEASE_TAG: ${{ env.NEW_RELIC_METADATA_RELEASE_TAG }}
+        run: |
+          # Aquí ejecutas tu script de build o deploy
+          ./deploy.sh
