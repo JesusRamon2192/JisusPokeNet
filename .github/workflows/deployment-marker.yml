@@ -1,5 +1,7 @@
 name: Change Tracking Marker
 on:
+  branches:
+    - main 
   release:
     types: [published]  # También puedes usar push o workflow_dispatch
 jobs:
