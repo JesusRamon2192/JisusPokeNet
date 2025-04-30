@@ -1,18 +1,22 @@
-name: Change Tracking Marker
+name: New Relic Deployment Marker
+
 on:
-  - release
-      types: [published]
+  push:
+    branches:
+      - main
+  workflow_dispatch:
 
 jobs:
   newrelic:
     runs-on: ubuntu-latest
-    name: New Relic
+    name: New Relic Deployment Marker Job
     steps:
-      # This step builds a var with the release tag value to use later
-      - name: Set Release Version from Tag
+      # Obtener el tag o branch como versión
+      - name: Set Release Version
         run: echo "RELEASE_VERSION=${{ github.ref_name }}" >> $GITHUB_ENV
-      # This step creates a new Change Tracking Marker
-      - name: New Relic Application Deployment Marker
+
+      # Crear marcador de despliegue
+      - name: Create Deployment Marker in New Relic
         uses: newrelic/deployment-marker-action@v2.2.0
         with:
           apiKey: ${{ secrets.NEW_RELIC_API_KEY }}
@@ -20,3 +24,5 @@ jobs:
           guid: ${{ secrets.NEW_RELIC_DEPLOYMENT_ENTITY_GUID }}
           version: "${{ env.RELEASE_VERSION }}"
           user: "${{ github.actor }}"
+          commit: "${{ github.sha }}"
+          description: "Deploy triggered via GitHub Actions on push to main"
