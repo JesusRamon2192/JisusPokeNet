@@ -1,0 +1,13 @@
+- name: Notify New Relic of deployment
+  run: |
+    curl -X POST https://api.newrelic.com/v2/applications/${{ secrets.NEW_RELIC_APP_ID }}/deployments.json \
+         -H "X-Api-Key:${{ secrets.NEW_RELIC_API_KEY }}" \
+         -H 'Content-Type: application/json' \
+         -d '{
+      "deployment": {
+        "revision": "${{ github.sha }}",
+        "changelog": "Desplegado desde GitHub Actions",
+        "description": "Auto deployment",
+        "user": "${{ github.actor }}"
+      }
+    }'
