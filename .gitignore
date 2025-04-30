@@ -1,0 +1,30 @@
+# Compilación
+bin/
+obj/
+
+# Paquetes
+packages/
+*.nupkg
+
+# Visual Studio
+.vs/
+*.user
+*.suo
+*.userprefs
+
+# Vscode
+.vscode/
+
+# Logs y resultados
+*.log
+TestResults/
+*.coverage
+*.coveragexml
+
+# Config locales o sensibles
+appsettings.Development.json
+secrets.json
+*.config
+
+# Otros
+*.DS_Store
