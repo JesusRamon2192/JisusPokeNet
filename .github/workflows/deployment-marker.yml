@@ -1,9 +1,7 @@
 name: Change Tracking Marker
-
 on:
   release:
     types: [published]  # También puedes usar push o workflow_dispatch
-
 jobs:
   newrelic:
     runs-on: ubuntu-latest
@@ -19,6 +17,4 @@ jobs:
           region: "US"
           guid: ${{ secrets.NEW_RELIC_DEPLOYMENT_ENTITY_GUID }}
           version: "${{ env.RELEASE_VERSION }}"
-          commit: "${{ github.sha }}"
-          description: "Release via GitHub Actions"
           user: "${{ github.actor }}"
