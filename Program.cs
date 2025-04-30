@@ -26,7 +26,7 @@ app.MapGet("/", () => "¡Bienvenido a la Pokedex API! Usa /pokemons para ver la 
 
 app.MapGet("/force-error", (HttpContext context) =>
 {
-    throw new Exception("Simulated error for CodeStreamYisusCodex");
+    throw new Exception("Simulated error for CodeStreamYisusCodexxxx");
 });
 
 app.Run();
