@@ -1,0 +1,24 @@
+name: Change Tracking Marker
+
+on:
+  release:
+    types: [published]  # También puedes usar push o workflow_dispatch
+
+jobs:
+  newrelic:
+    runs-on: ubuntu-latest
+    name: New Relic Deployment Marker
+    steps:
+      - name: Set Release Version from Tag
+        run: echo "RELEASE_VERSION=${{ github.ref_name }}" >> $GITHUB_ENV
+
+      - name: Send Marker to New Relic
+        uses: newrelic/deployment-marker-action@v2.2.0
+        with:
+          apiKey: ${{ secrets.NEW_RELIC_API_KEY }}
+          region: "US"
+          guid: ${{ secrets.NEW_RELIC_DEPLOYMENT_ENTITY_GUID }}
+          version: "${{ env.RELEASE_VERSION }}"
+          commit: "${{ github.sha }}"
+          description: "Release via GitHub Actions"
+          user: "${{ github.actor }}"
