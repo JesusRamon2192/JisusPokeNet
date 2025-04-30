@@ -18,7 +18,7 @@ jobs:
         with:
           apiKey: ${{ secrets.NEW_RELIC_API_KEY }}
           region: "US"
-          guid: ${{ secrets.NEW_RELIC_DEPLOYMENT_ENTITY_GUID_App123 }}
+          guid: ${{ secrets.NEW_RELIC_DEPLOYMENT_ENTITY_GUID }}
           version: "${{ env.RELEASE_VERSION }}"
           changelog: "https://github.com/${{ github.repository }}/blob/master/CHANGELOG.md"
           commit: "${{ github.sha }}"
@@ -46,7 +46,7 @@ jobs:
         with:
           apiKey: ${{ secrets.NEW_RELIC_API_KEY }}
           region: "US"
-          guid: ${{ secrets.NEW_RELIC_DEPLOYMENT_ENTITY_GUID_App789 }}
+          guid: ${{ secrets.NEW_RELIC_DEPLOYMENT_ENTITY }}
           version: "${{ env.RELEASE_VERSION }}"
           changelog: "https://github.com/${{ github.repository }}/blob/master/CHANGELOG.md"
           commit: "${{ github.sha }}"
