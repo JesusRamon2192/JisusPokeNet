@@ -24,15 +24,21 @@ app.MapGet("/pokemons/{id}", (int id, PokemonService service) =>
 
 app.MapGet("/", () => "¡Bienvenido a la Pokedex API! Usa /pokemons para ver la lista de Pokémon.");
 
-app.MapGet("/force-error", (HttpContext context) =>
-{
-    var query = context.Request.Query;
-    if (query.ContainsKey("error"))
-    {
-        throw new Exception("Simulated error for CodeStreamYisusCodexx");
-    }
+// app.MapGet("/force-error", (HttpContext context) =>
+// {
+//     var query = context.Request.Query;
+//     if (query.ContainsKey("error"))
+//     {
+//         throw new Exception("Simulated error for CodeStreamYisusCodexx");
+//     }
 
-    return Results.Ok("No error triggered");
+//     return Results.Ok("No error triggered");
+// });
+
+app.MapGet("/force-error", () =>
+{
+    throw new SystemException("Simulated runtime error for CodeStreamYisusCodexx");
 });
+
 
 app.Run();
